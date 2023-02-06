@@ -3,9 +3,6 @@ const express = require("express");
 const routes = require("./routes");
 const sequelize = require("./config/connection.js"); // Imports sequelize connection.
 
-// Import model to sync table with database.
-const Index = require("./models/index.js");
-
 const PORT = process.env.PORT || 3001;
 const app = express();
 
@@ -24,5 +21,5 @@ app.use((req, res) => {
 // Syncs sequelize models to the database, then starts the Express.js server.
 sequelize.sync({ force: false }).then(() => {
   // Force false so data doesn't get dropped on every sync.
-  app.listen(PORT, () => console.log("Now listening"));
+  app.listen(PORT, () => console.log(`Now listening on Port ${PORT}`));
 });
