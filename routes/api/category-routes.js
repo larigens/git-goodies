@@ -1,6 +1,6 @@
 const router = require("express").Router();
 const sequelize = require("../../config/connection");
-const { Category } = require("../../models"); // Imports the models.
+const { Category, Product } = require("../../models"); // Imports the models.
 
 // The `/api/categories` endpoint.
 
@@ -9,7 +9,13 @@ const { Category } = require("../../models"); // Imports the models.
 router.get("/", async (req, res) => {
   try {
     // Store the categoryData in a variable once the promise is resolved.
-    const categoryData = await Category.findAll();
+    const categoryData = await Category.findAll({
+      attributes: [['id', 'CategoryId'], ['category_name', 'Category']],
+      include: [{
+        model: Product,
+        attributes: [['id', 'ProductId'], ['product_name', 'Product'], ['price', 'Price'], ['stock', 'Stock'], ['category_id', 'CategoryId']],
+      }]
+    });
     categoryData.every((category) => category instanceof Category);
     // Find all categories from the table and returns the categoryData promise inside of the JSON response.
     res.status(200).json(categoryData); // 200 status code means the request is successful.
@@ -22,19 +28,18 @@ router.get("/", async (req, res) => {
 // Find one category by its `id` value.
 router.get("/:id", async (req, res) => {
   try {
-    const categoryData = await Category.findByPk(req.params.id);
+    const categoryData = await Category.findByPk(req.params.id, {
+      attributes: [['id', 'CategoryId'], ['category_name', 'Category']],
+      include: [{
+        model: Product,
+        attributes: [['id', 'ProductId'], ['product_name', 'Product'], ['price', 'Price'], ['stock', 'Stock'], ['category_id', 'CategoryId']],
+      }]
+    });
     if (!categoryData) {
       res.status(404).json({ message: "No categories with this id!" });
       return;
-    } else {
-      categoryData instanceof Category;
-      // Use plain SQL to include its associated Products.
-      sequelize.literal(
-        `(SELECT product_name AS Product FROM product WHERE product.category_id = ${req.params.id})`
-      ),
-        "Products",
-        res.status(200).json(categoryData);
     }
+    res.status(200).json(categoryData);
   } catch (err) {
     res.status(500).json(err);
   }
@@ -52,6 +57,7 @@ router.post("/", async (req, res) => {
       res.status(404).json({ message: "Please enter the necessary data!" });
       return;
     }
+    await newCategory.save(); // Add it to the database.
     res.status(200).json(newCategory);
   } catch (err) {
     res.status(400).json(err); // 400 status code means the server could not understand the request.
@@ -70,10 +76,11 @@ router.put("/:id", async (req, res) => {
       {
         // Gets the category based on the id given in the request parameters.
         where: {
-          id: req.params.id,
+          id: req.params.id
         },
       }
     );
+    await updatedCategory.save(); //  Updated in the database.
     res.status(200).json(updatedCategory);
   } catch (err) {
     res.status(500).json(err);

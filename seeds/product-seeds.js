@@ -11,7 +11,7 @@ const productData = [
     product_name: "Running Sneakers",
     price: 90.0,
     stock: 25,
-    category_id: 1, //2
+    category_id: 5,
   },
   {
     product_name: "Branded Baseball Hat",
