@@ -120,29 +120,13 @@ The following image is an illustration of the schema of the existing tables in t
 
 ## Usage
 
-First you need to seed the database using the command:
-
-```bash
-npm run seed
-```
-
-Then launch the application by entering the command below on your terminal:
+Launch the application by entering the command below on your terminal:
 
 ```bash
 npm start
 ```
 
-Once the application is launched, GIVEN a functional Express.js API
-WHEN I add my database name, MySQL username, and MySQL password to an environment variable file
-THEN I am able to connect to a database using Sequelize
-WHEN I enter schema and seed commands
-THEN a development database is created and is seeded with test data
-WHEN I enter the command to invoke the application
-THEN my server is started and the Sequelize models are synced to the MySQL database
-WHEN I open API GET routes in Insomnia for categories, products, or tags
-THEN the data for each of these routes is displayed in a formatted JSON
-WHEN I test API POST, PUT, and DELETE routes in Insomnia
-THEN I am able to successfully create, update, and delete data in my database
+Once the server is running, you have the option to retrieve either all categories, products, and tags or a specific one. Additionally, you can perform actions such as adding new categories, products, and tags, updating them, or removing them entirely.
 
 If you need more guidance on how to use Git Goodies, click [here]() for the tutorial!
 

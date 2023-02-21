@@ -39,7 +39,9 @@ router.get("/:id", async (req, res) => {
       res.status(404).json({ message: "No categories with this id!" });
       return;
     }
-    res.status(200).json(categoryData);
+    else {
+      res.status(200).json(categoryData);
+    }
   } catch (err) {
     res.status(500).json(err);
   }
@@ -57,8 +59,10 @@ router.post("/", async (req, res) => {
       res.status(404).json({ message: "Please enter the necessary data!" });
       return;
     }
-    await newCategory.save(); // Add it to the database.
-    res.status(200).json(newCategory);
+    else {
+      await newCategory.save(); // Add it to the database.
+      res.status(200).json(newCategory);
+    }
   } catch (err) {
     res.status(400).json(err); // 400 status code means the server could not understand the request.
   }
@@ -80,10 +84,14 @@ router.put("/:id", async (req, res) => {
         },
       }
     );
+    if (!updatedCategory) {
+      res.status(404).json({ message: 'No category with this id was found!' });
+      return;
+    }
     await updatedCategory.save(); //  Updated in the database.
     res.status(200).json(updatedCategory);
   } catch (err) {
-    res.status(500).json(err);
+    res.status(400).json(err);
   }
 });
 
@@ -96,6 +104,10 @@ router.delete("/:id", async (req, res) => {
         id: req.params.id,
       },
     });
+    if (!deletedCategory) {
+      res.status(404).json({ message: 'No category with this id was found!' });
+      return;
+    }
     res.status(200).json(deletedCategory);
   } catch (err) {
     res.status(500).json(err);
