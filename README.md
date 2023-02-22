@@ -114,9 +114,12 @@ Once you run this, npm will begin the installation process of all of the current
 
 ## Mock-Up
 
-The following image is an illustration of the schema of the existing tables in the database of this application:
+The following images are an illustration of the existing tables in the database of this application:
 
-<img src="./assets/images/demo1.png" alt="App Screenshot" width="700px" height="342px" />
+<img src="./assets/category.png" alt="category table" />
+<img src="./assets/product.png" alt="product table" />
+<img src="./assets/tag.png" alt="tag table" /> <br>
+<img src="./assets/product_tag.png" alt="product_tag table" />
 
 ## Usage
 
