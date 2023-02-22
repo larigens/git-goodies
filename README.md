@@ -24,7 +24,7 @@
 
 ## Description
 
-Git Goodies is a back end app for the e-commerce website that uses the latest technologies to be able to provide a suite of services to businesses of all sizes.
+Git Goodies is a backend application designed for e-commerce websites, leveraging the latest technologies to deliver a comprehensive range of services suitable for businesses of all scales.
 
 ## Table of Contents
 
