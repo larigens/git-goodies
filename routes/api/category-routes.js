@@ -92,11 +92,7 @@ router.put("/:id", async (req, res) => {
     else {
       // Collect all data from the updated category to display it on Insomnia.
       const updatedCategoryData = await Category.findByPk(req.params.id, {
-        attributes: [['id', 'CategoryId'], ['category_name', 'Category']],
-        include: [{
-          model: Product,
-          attributes: [['id', 'ProductId'], ['product_name', 'Product'], ['price', 'Price'], ['stock', 'Stock'], ['category_id', 'CategoryId']],
-        }]
+        attributes: [['id', 'CategoryId'], ['category_name', 'Category']]
       })
       res.status(200).json(updatedCategoryData);
     }

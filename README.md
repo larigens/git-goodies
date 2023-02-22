@@ -128,7 +128,7 @@ npm start
 
 Once the server is running, you have the option to retrieve either all categories, products, and tags or a specific one. Additionally, you can perform actions such as adding new categories, products, and tags, updating them, or removing them entirely.
 
-If you need more guidance on how to use Git Goodies, click [here]() for the tutorial!
+If you need more guidance on how to use Git Goodies, click [here](https://drive.google.com/file/d/1K0CaUAnxfvJz3raCwn2l4JtA-yjfzyXD/view) for the tutorial!
 
 ## Tests
 
