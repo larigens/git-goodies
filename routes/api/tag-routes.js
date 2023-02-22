@@ -1,15 +1,16 @@
 const router = require('express').Router();
 const { Tag, Product, ProductTag } = require('../../models');
 
-// The `/api/tags` endpoint
+//=============== The `/api/tags` endpoint ===============//
 
-// find all tags
-// be sure to include its associated Product data
+// Get all tags and changes the anonymous callback function to become Asynchronous with with try/catch for errors.
+// along with HTTP status codes.
 router.get("/", async (req, res) => {
   try {
     // Store the tagData in a variable once the promise is resolved.
     const tagData = await Tag.findAll({
       attributes: [['id', 'TagId'], ['tag_name', 'Tag']],
+      // Includes its associated Product data.
       include: [
         {
           model: Product,
@@ -17,7 +18,6 @@ router.get("/", async (req, res) => {
         }
       ]
     })
-    tagData.every((tag) => tag instanceof Tag);
     // Find all tags from the table and returns the tagData promise inside of the JSON response.
     res.status(200).json(tagData); // 200 status code means the request is successful.
   } catch (err) {
@@ -26,6 +26,7 @@ router.get("/", async (req, res) => {
   }
 });
 
+// Find one tag by its `id` value.
 router.get("/:id", async (req, res) => {
   try {
     const tagData = await Tag.findByPk(req.params.id, {
@@ -37,27 +38,32 @@ router.get("/:id", async (req, res) => {
         }
       ]
     })
+    // Response if no data is found for the entered id.
     if (!tagData) {
       res.status(404).json({ message: "No tags with this id!" });
       return;
     }
-    res.status(200).json(tagData);
+    else {
+      res.status(200).json(tagData);
+    }
   } catch (err) {
     res.status(500).json(err);
   }
 });
 
+// Creates a new tag.
 router.post("/", async (req, res) => {
   try {
     // Use Sequelize's `create()` method to add a row to the table.
     const newTag = await Tag.create({ tag_name: req.body.tag_name })
-    // if no product tags, just respond
     if (!newTag) {
-      res.status(404).json({ message: "Please enter the necessary data!" }); // Create?
+      res.status(404).json({ message: "Please enter the necessary data!" });
       return;
     }
     else {
-      res.status(200).json(newTag);
+      // Collect all data from the new tag to display it on Insomnia.
+      const newTagData = await Tag.findByPk(newTag.id, { attributes: [['id', 'TagId'], ['tag_name', 'Tag']] })
+      res.status(200).json(newTagData);
     }
   } catch (err) {
     res.status(400).json(err);
@@ -80,16 +86,25 @@ router.put("/:id", async (req, res) => {
         },
       }
     );
-    if (!updatedTag) {
+    if (!updatedTag[0]) {
       res.status(404).json({ message: 'No tag with this id was found!' });
       return;
     }
     else {
-      await updatedTag.save(); //  Updated in the database.
-      res.status(200).json(updatedTag);
+      // Collect all data from the updated tag to display it on Insomnia.
+      const updatedTagData = await Tag.findByPk(req.params.id, {
+        attributes: [['id', 'TagId'], ['tag_name', 'Tag']],
+        include: [
+          {
+            model: Product,
+            attributes: [['id', 'ProductId'], ['product_name', 'Product'], ['price', 'Price'], ['stock', 'Stock'], ['category_id', 'CategoryId']],
+          }
+        ]
+      })
+      res.status(200).json(updatedTagData);
     }
   } catch (err) {
-    res.status(400).json(err);
+    res.status(500).json(err);
   }
 });
 
@@ -97,16 +112,14 @@ router.put("/:id", async (req, res) => {
 router.delete("/:id", async (req, res) => {
   try {
     // Looks for the tags based on id given in the request parameters and deletes the instance from the database.
-    const deletedTag = await Tag.destroy({
-      where: {
-        id: req.params.id,
-      },
-    });
+    const deletedTag = await Tag.destroy({ where: { id: req.params.id } });
     if (!deletedTag) {
       res.status(404).json({ message: 'No tag with this id was found!' });
       return;
     }
-    res.status(200).json(deletedTag);
+    else {
+      res.status(200).json({ message: 'Tag successfully deleted!' });
+    }
   } catch (err) {
     res.status(500).json(err);
   }
